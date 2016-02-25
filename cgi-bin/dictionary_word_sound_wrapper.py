@@ -4,10 +4,20 @@
 # code to get the mp3 file of the word, and return the mp3 file link to the
 # ajax call
 
-import urllib.request, cgi, re, json
+import urllib.request, cgi, re, json, os, datetime, os.path
 
 url_parameters = cgi.FieldStorage()
-word = url_parameters.getlist('word')[0].strip()
+word = url_parameters.getvalue('word', '').strip()
+definition = url_parameters.getvalue('definition', '').strip();
+
+# Store the word/definition pair into a file if definition exists
+if definition != '':
+    cwd = os.getcwd()
+    file_name = 'static/newword_' + str(datetime.date.today())
+
+    with open(os.path.join(cwd, file_name), 'a+') as word_file:
+        word_file.write(word + '\n' + definition +'\n')
+
 dictionary_response = urllib.request.urlopen('http://dictionary.reference.com/browse/' + word)
 dictionary_html = dictionary_response.read().decode(dictionary_response.headers.get_content_charset())
 

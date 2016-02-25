@@ -24,7 +24,7 @@ $( document ).ready(function() {
         });
     };
 
-    $( 'a' ).click(function( eventObject ) {
+    $( 'body' ).on('click', 'a', function( eventObject ) {
         eventObject.preventDefault();
         var element = $( this );
         word = element.html();

@@ -12,9 +12,16 @@ header = '''
     <script src="http://code.jquery.com/jquery-2.2.0.min.js"></script>
     <script>
 $( document ).ready(function() {
-    var get_dictionary = function( word ) {
+    var get_dictionary = function( word, definition ) {
         // console.log(word);
-        $.get( 'dictionary_word_sound_wrapper.py?word=' + word, function (response) {
+        var url = '';
+        if ( typeof definition !== 'undefined' && definition !== '' ) {
+            url = 'dictionary_word_sound_wrapper.py?word=' + word + '&definition=' + definition;
+        } else {
+            url = 'dictionary_word_sound_wrapper.py?word=' + word;
+        }
+        console.log(url);
+        $.get( url, function (response) {
             console.log( response );
             $( '#sound' ).html( response.word_sound );
             var word_detail = '<h2 class="word">' + response.word + '</h2>' +
@@ -24,25 +31,33 @@ $( document ).ready(function() {
         });
     };
 
-    $( 'a' ).click(function( eventObject ) {
+    $( 'body' ).on('click', 'a', function( eventObject ) {
         eventObject.preventDefault();
         var element = $( this );
         word = element.html();
         get_dictionary(word);
-    }); // End $( 'a' ).click
+    }); // End $( 'body' ).on('click ...
 
-    $( '#search' ).click(function( eventObject ) {
+    var search_word = function( eventObject ) {
         eventObject.preventDefault();
         var word = $( '#search-word' ).val();
-        get_dictionary(word);
+        var definition = $( '#search-definition' ).val();
+        $( '#search-word' ).select();
+        $( '#search-definition' ).val('#definition');
+        get_dictionary(word, definition);
+
+        var word_html = '<dt><a class="word" href="#' + word + '">' + word + '</a></dt>';
+        word_html += '<dd>' + definition + '</dd>'
+        $( '#word-list' ).prepend( word_html );
+    };
+
+    $( '#search' ).click(function( eventObject ) {
+        search_word(eventObject);
     });
 
     $( '.input' ).keypress(function( eventObject ) {
         if (eventObject.which == 13) {
-            eventObject.preventDefault();
-            var word = $( '#search-word' ).val();
-            $( '#search-word' ).select();
-            get_dictionary(word);
+            search_word(eventObject);
         }
     });
 
@@ -63,7 +78,7 @@ search_form = '''
 <div id='word-search-form'>
 <form method='get' action=''>
     <input type='text' name='search-word' id='search-word' class='input'>
-    <input type='text' name='definition' value='#definition' class='input'>
+    <input type='text' name='definition' id='search-definition' value='#definition' class='input'>
     <input type='button' value='Search', name='search' id='search'>
 </form>
 </div>
@@ -75,14 +90,6 @@ print('<div id="sound">Sound</div>')
 
 print('<div id="main-words">')
 print('<dl id="word-list">')
-cwd = os.getcwd()
-wordfile = open(os.path.join(cwd, 'static/gre1'))
-for line in wordfile:
-    word = line.strip()
-    url_reference = 'http://dictionary.reference.com/browse/' + word
-    print('<dt><a class="word" href="%s">%s</a></dt>' % (url_reference, word))
-    word_definition = wordfile.__next__().strip()
-    print('<dd>%s</dd>' % word_definition)
 print('</dl>') # Closing #word-list
 print('</div>') # Closing #main_word
 
