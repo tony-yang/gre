@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 
-import os
+import os, cgi
+
+url_parameters = cgi.FieldStorage()
+category = url_parameters.getvalue('category', 'vocabulary').strip()
+title = url_parameters.getvalue('title', 'gre1').strip();
+
+cwd = os.getcwd()
+full_file_path = os.path.join(cwd, 'static', category, title)
 
 header = '''
 <!DOCTYPE html>
@@ -46,13 +53,13 @@ print('<div id="sound">Sound</div>')
 print('<div id="main-words">')
 print('<dl id="word-list">')
 cwd = os.getcwd()
-wordfile = open(os.path.join(cwd, 'static/vocabulary/gre1'))
-for line in wordfile:
-    word = line.strip()
-    url_reference = 'http://dictionary.reference.com/browse/' + word
-    print('<dt><a class="word" href="%s">%s</a></dt>' % (url_reference, word))
-    word_definition = wordfile.__next__().strip()
-    print('<dd>%s</dd>' % word_definition)
+with open(full_file_path) as wordfile:
+    for line in wordfile:
+        word = line.strip()
+        url_reference = 'http://dictionary.reference.com/browse/' + word
+        print('<dt><a class="word" href="%s">%s</a></dt>' % (url_reference, word))
+        word_definition = wordfile.__next__().strip()
+        print('<dd>%s</dd>' % word_definition)
 print('</dl>') # Closing #word-list
 print('</div>') # Closing #main_word
 
