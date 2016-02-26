@@ -10,14 +10,6 @@ url_parameters = cgi.FieldStorage()
 word = url_parameters.getvalue('word', '').strip()
 definition = url_parameters.getvalue('definition', '').strip();
 
-# Store the word/definition pair into a file if definition exists
-if definition != '':
-    cwd = os.getcwd()
-    file_name = 'static/newword_' + str(datetime.date.today())
-
-    with open(os.path.join(cwd, file_name), 'a+') as word_file:
-        word_file.write(word + '\n' + definition +'\n')
-
 dictionary_response = urllib.request.urlopen('http://dictionary.reference.com/browse/' + word)
 dictionary_html = dictionary_response.read().decode(dictionary_response.headers.get_content_charset())
 
@@ -34,6 +26,14 @@ response = {'word': word,
             'word_pronunciation': word_pronunciation_response,
             'word_definition': word_definition_response}
 json_response = json.dumps(response)
+
+# Store the word/definition pair into a file if definition exists
+if definition != '' and word_definition_response != '':
+    cwd = os.getcwd()
+    file_name = 'static/newword_' + str(datetime.date.today())
+
+    with open(os.path.join(cwd, file_name), 'a+') as word_file:
+        word_file.write(word + '\n' + definition +'\n')
 
 print('Content-type: application/json\n')
 print(json_response)
