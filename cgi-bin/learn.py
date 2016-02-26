@@ -46,7 +46,7 @@ print('<div id="sound">Sound</div>')
 print('<div id="main-words">')
 print('<dl id="word-list">')
 cwd = os.getcwd()
-wordfile = open(os.path.join(cwd, 'static/gre1'))
+wordfile = open(os.path.join(cwd, 'static/vocabulary/gre1'))
 for line in wordfile:
     word = line.strip()
     url_reference = 'http://dictionary.reference.com/browse/' + word

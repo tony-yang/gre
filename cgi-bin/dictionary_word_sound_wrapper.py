@@ -30,7 +30,7 @@ json_response = json.dumps(response)
 # Store the word/definition pair into a file if definition exists
 if definition != '' and word_definition_response != '':
     cwd = os.getcwd()
-    file_name = 'static/newword_' + str(datetime.date.today())
+    file_name = 'static/vocabulary/newword_' + str(datetime.date.today())
 
     with open(os.path.join(cwd, file_name), 'a+') as word_file:
         word_file.write(word + '\n' + definition +'\n')
