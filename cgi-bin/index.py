@@ -13,12 +13,6 @@ header = '''
     <script src="../style/index.js"></script>
 </head>
 '''
-print('Content-type: text/html\n')
-
-print(header)
-
-print('<body>')
-print('<h1>GRE</h1>')
 
 search_form = '''
 <div id='word-search-form'>
@@ -29,6 +23,14 @@ search_form = '''
 </form>
 </div>
 '''
+
+
+print('Content-type: text/html\n')
+
+print(header)
+
+print('<body>')
+print('<h1>GRE</h1>')
 
 print(search_form)
 

@@ -6,9 +6,6 @@ url_parameters = cgi.FieldStorage()
 category = url_parameters.getvalue('category', 'vocabulary').strip()
 title = url_parameters.getvalue('title', 'gre1').strip();
 
-cwd = os.getcwd()
-full_file_path = os.path.join(cwd, 'static', category, title)
-
 header = '''
 <!DOCTYPE html>
 <html>
@@ -20,6 +17,35 @@ header = '''
     <script src="../style/learn.js"></script>
 </head>
 '''
+
+def create_content():
+    cwd = os.getcwd()
+    full_file_path = os.path.join(cwd, 'static', category, title)
+    content = ''
+
+    if category == 'vocabulary':
+        content = '<dl id="word-list">'
+        with open(full_file_path) as wordfile:
+            for line in wordfile:
+                word = line.strip()
+                url_reference = 'http://dictionary.reference.com/browse/' + word
+                content += '<dt><a class="word" href="%s">%s</a></dt>' % (url_reference, word)
+                word_definition = wordfile.__next__().strip()
+                content += '<dd>%s</dd>' % word_definition
+        content += '</dl>'
+    elif category == 'passage' or category == 'books':
+        content = '<div id="word-list">'
+        with open(full_file_path) as wordfile:
+            story = wordfile.read().strip()
+            paragraphs = story.splitlines()
+            paragraphs = [' '.join(['<span>' + word + '</span>' for word in line.split(' ')]) for line in paragraphs]
+            paragraphs = ['<p>' + line + '</p>' for line in paragraphs]
+
+            content += '\n'.join(paragraphs)
+        content += '</div>'
+
+    return content
+
 print('Content-type: text/html\n')
 
 print(header)
@@ -30,16 +56,9 @@ print('<h1>GRE</h1>')
 print('<div id="sound">Sound</div>')
 
 print('<div id="main-words">')
-print('<dl id="word-list">')
-cwd = os.getcwd()
-with open(full_file_path) as wordfile:
-    for line in wordfile:
-        word = line.strip()
-        url_reference = 'http://dictionary.reference.com/browse/' + word
-        print('<dt><a class="word" href="%s">%s</a></dt>' % (url_reference, word))
-        word_definition = wordfile.__next__().strip()
-        print('<dd>%s</dd>' % word_definition)
-print('</dl>') # Closing #word-list
+
+print(create_content())
+
 print('</div>') # Closing #main_word
 
 print('<div id="word-detail">')
