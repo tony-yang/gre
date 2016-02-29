@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-  $( 'body' ).on('click', 'a', function( eventObject ) {
+  $( 'body' ).on('click', 'a.word', function( eventObject ) {
     eventObject.preventDefault();
     var element = $( this );
     word = element.html();

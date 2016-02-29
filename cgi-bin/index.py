@@ -24,6 +24,14 @@ search_form = '''
 </div>
 '''
 
+navigation = '''
+<div id="nav">
+    <ul>
+        <li><a href="index.py">Home</a></li>
+        <li><a href="learn.py">Learn</a></li>
+    </ul>
+</div>
+'''
 
 print('Content-type: text/html\n')
 
@@ -31,6 +39,7 @@ print(header)
 
 print('<body>')
 print('<h1>GRE</h1>')
+print(navigation)
 
 print(search_form)
 

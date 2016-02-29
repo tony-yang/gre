@@ -3,8 +3,8 @@
 import os, cgi
 
 url_parameters = cgi.FieldStorage()
-category = url_parameters.getvalue('category', 'vocabulary').strip()
-title = url_parameters.getvalue('title', 'gre1').strip();
+category = url_parameters.getvalue('category', 'index').strip()
+title = url_parameters.getvalue('title', '').strip();
 
 header = '''
 <!DOCTYPE html>
@@ -16,6 +16,15 @@ header = '''
     <script src="../style/mainlib.js"></script>
     <script src="../style/learn.js"></script>
 </head>
+'''
+
+navigation = '''
+<div id="nav">
+    <ul>
+        <li><a href="index.py">Home</a></li>
+        <li><a href="learn.py">Learn</a></li>
+    </ul>
+</div>
 '''
 
 def create_content():
@@ -43,6 +52,9 @@ def create_content():
 
             content += '\n'.join(paragraphs)
         content += '</div>'
+    elif category == 'index':
+        static_path = os.path.join(cwd, 'static')
+
 
     return content
 
@@ -52,6 +64,7 @@ print(header)
 
 print('<body>')
 print('<h1>GRE</h1>')
+print(navigation)
 
 print('<div id="sound">Sound</div>')
 
