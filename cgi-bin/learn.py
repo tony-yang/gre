@@ -53,7 +53,21 @@ def create_content():
             content += '\n'.join(paragraphs)
         content += '</div>'
     elif category == 'index':
+        content = '<div id="learn-nav">'
         static_path = os.path.join(cwd, 'static')
+        for path, dirs, files in os.walk(static_path):
+            current_path = os.path.split(path)[-1]
+            if current_path == 'static':
+                content += '<h2>Index</h2>'
+            else:
+                content += '<h3>%s</h3><ul id="%s-index">' % (current_path, current_path)
+
+            for filename in files:
+                content_url = 'learn.py?category=%s&title=%s' % (current_path, filename)
+                content += '<li><a href="%s">%s</a></li>' % (content_url, filename)
+            content += '</ul>'
+
+        content += '</div>'
 
 
     return content
