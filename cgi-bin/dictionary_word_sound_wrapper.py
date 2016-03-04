@@ -16,7 +16,11 @@ dictionary_response = urllib.request.urlopen('http://dictionary.reference.com/br
 dictionary_html = dictionary_response.read().decode(dictionary_response.headers.get_content_charset())
 
 mp3_file = re.search('<source.*</audio>', dictionary_html)
-audio_response = '<audio controls autoplay>' + mp3_file.group(0).strip()
+audio_response = '<audio controls autoplay>'
+if mp3_file:
+    audio_response += mp3_file.group(0).strip()
+else:
+    audio_response += '</audio>'
 
 word_pronunciation = re.search('<span class="pron spellpron">.*</span>', dictionary_html)
 word_pronunciation_response = word_pronunciation.group(0).strip()
