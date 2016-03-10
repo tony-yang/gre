@@ -8,7 +8,7 @@ import urllib.request, cgi, re, json, os, datetime, os.path
 
 url_parameters = cgi.FieldStorage()
 word = url_parameters.getvalue('word', '').strip()
-punctuation = ',.!?"()[]'
+punctuation = ',.!?"()[]:'
 word = word.translate(word.maketrans(punctuation, " " * len(punctuation)))
 definition = url_parameters.getvalue('definition', '').strip();
 
