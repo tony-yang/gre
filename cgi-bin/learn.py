@@ -27,6 +27,14 @@ navigation = '''
 </div>
 '''
 
+def create_list_index(list_name, current_path, files):
+    content = '<h3>%s</h3><ul id="%s-index">' % (list_name, list_name)
+    for filename in files:
+        content_url = 'learn.py?category=%s&title=%s' % (current_path, filename)
+        content += '<li><a href="%s">%s</a></li>' % (content_url, filename)
+    content += '</ul>'
+    return content
+
 def create_content():
     cwd = os.getcwd()
     full_file_path = os.path.join(cwd, 'static', category, title)
@@ -59,13 +67,18 @@ def create_content():
             current_path = os.path.split(path)[-1]
             if current_path == 'static':
                 content += '<h2>Index</h2>'
-            else:
-                content += '<h3>%s</h3><ul id="%s-index">' % (current_path, current_path)
+            elif current_path == 'vocabulary':
+                list_name = 'new-vocabulary'
+                content += create_list_index(list_name, current_path, files)
 
-            for filename in files:
-                content_url = 'learn.py?category=%s&title=%s' % (current_path, filename)
-                content += '<li><a href="%s">%s</a></li>' % (content_url, filename)
-            content += '</ul>'
+                list_name = 'learned-vocabulary'
+                content += create_list_index(list_name, current_path, files)
+
+                list_name = 'full-list-vocabulary'
+                content += create_list_index(list_name, current_path, files)
+            else:
+                list_name = current_path
+                content += create_list_index(list_name, current_path, files)
 
         content += '</div>'
 
