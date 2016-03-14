@@ -5,6 +5,7 @@ import os, cgi
 url_parameters = cgi.FieldStorage()
 category = url_parameters.getvalue('category', 'index').strip()
 title = url_parameters.getvalue('title', '').strip();
+get_param_vocabulary = url_parameters.getvalue('vocabulary', '').strip()
 
 header = '''
 <!DOCTYPE html>
@@ -27,12 +28,18 @@ navigation = '''
 </div>
 '''
 
-def create_list_index(list_name, current_path, files):
+def create_list_index(list_name, current_path, files, vocabulary_level=''):
     content = '<h3>%s</h3><ul id="%s-index">' % (list_name, list_name)
-    for filename in files:
-        content_url = 'learn.py?category=%s&title=%s' % (current_path, filename)
-        content += '<li><a href="%s">%s</a></li>' % (content_url, filename)
-    content += '</ul>'
+    if vocabulary_level:
+        for filename in files:
+            content_url = 'learn.py?category=%s&title=%s&vocabulary=%s' % (current_path, filename, vocabulary_level)
+            content += '<li><a href="%s">%s</a></li>' % (content_url, filename)
+        content += '</ul>'
+    else:
+        for filename in files:
+            content_url = 'learn.py?category=%s&title=%s' % (current_path, filename)
+            content += '<li><a href="%s">%s</a></li>' % (content_url, filename)
+        content += '</ul>'
     return content
 
 def create_content():
@@ -43,12 +50,26 @@ def create_content():
     if category == 'vocabulary':
         content = '<dl id="word-list">'
         with open(full_file_path) as wordfile:
+            word_counter = 0
             for line in wordfile:
                 word = line.strip()
-                url_reference = 'http://dictionary.reference.com/browse/' + word
-                content += '<dt><a class="word" href="%s">%s</a></dt>' % (url_reference, word)
-                word_definition = wordfile.__next__().strip()
-                content += '<dd>%s</dd>' % word_definition
+                try:
+                    word_definition = wordfile.__next__().strip()
+                except StopIteration:
+                    word_definition = '0 NA'
+
+                word_counter += 1
+                url_reference = 'http://dictionary.reference.com/browse/' + word[2:]
+
+                if word[:1] == '0' and get_param_vocabulary == 'new':
+                    content += '<dt><a class="%s word" href="%s">%s</a><span class="%s %s learned-word">Learned</span></dt>' % (word_counter, url_reference, word[2:], word_counter, word[2:])
+                    content += '<dd>%s</dd>' % word_definition[2:]
+                elif word[:1] == '1' and get_param_vocabulary == 'learned':
+                    content += '<dt><a class="%s word" href="%s">%s</a><span class="%s %s unlearned-word">Unlearn</span></dt>' % (word_counter, url_reference, word[2:], word_counter, word[2:])
+                    content += '<dd>%s</dd>' % word_definition[2:]
+                elif not get_param_vocabulary:
+                    content += '<dt><a class="%s word" href="%s">%s</a></dt>' % (word_counter, url_reference, word[2:])
+                    content += '<dd>%s</dd>' % word_definition[2:]
         content += '</dl>'
     elif category == 'passage' or category == 'books':
         content = '<div id="word-list">'
@@ -69,10 +90,12 @@ def create_content():
                 content += '<h2>Index</h2>'
             elif current_path == 'vocabulary':
                 list_name = 'new-vocabulary'
-                content += create_list_index(list_name, current_path, files)
+                vocabulary_level = 'new'
+                content += create_list_index(list_name, current_path, files, vocabulary_level)
 
                 list_name = 'learned-vocabulary'
-                content += create_list_index(list_name, current_path, files)
+                vocabulary_level = 'learned'
+                content += create_list_index(list_name, current_path, files, vocabulary_level)
 
                 list_name = 'full-list-vocabulary'
                 content += create_list_index(list_name, current_path, files)

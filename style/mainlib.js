@@ -30,3 +30,27 @@ var search_word = function( eventObject ) {
   word_html += '<dd>' + definition + '</dd>'
   $( '#word-list' ).prepend( word_html );
 };
+
+var update_vocabulary_list = function( word_number, word, action, filename ) {
+  var url = '';
+  if ( typeof word_number !== 'undefined' || typeof word !== 'undefined' || typeof action !== 'undefined' && typeof filename !== 'undefined' ) {
+    url = 'vocabulary_learning_progress.py?word=' + word + '&wordnum=' + word_number + '&action=' + action + '&filename=' + filename;
+  }
+
+  $.get( url, function (response) {
+    // console.log( response );
+  });
+};
+
+var get_url_parameter_by_name = function(name) {
+  var parameters = window.location.search.substring(1).toLowerCase();
+  var parameters_array = parameters.split('&');
+  var i, parameter;
+
+  for (i = 0; i < parameters_array.length; i++) {
+    parameter = parameters_array[i].split('=');
+    if (parameter[0] === name) {
+      return parameter[1] === 'undefined' ? true : parameter[1];
+    }
+  }
+};
