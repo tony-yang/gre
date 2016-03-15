@@ -48,7 +48,11 @@ def create_content():
     content = ''
 
     if category == 'vocabulary':
-        content = '<dl id="word-list">'
+        if get_param_vocabulary == 'new':
+            content += '<div id="start-flashcard"><span>Start Flashcards</span></div>'
+            content += '<div id="flashcards"><div id="flashcard-stop"><span>Stop</span></div><div id="word-flashcard"></div></div>'
+
+        content += '<dl id="word-list">'
         with open(full_file_path) as wordfile:
             word_counter = 0
             for line in wordfile:

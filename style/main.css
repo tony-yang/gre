@@ -23,6 +23,10 @@
   font-size: 150%;
 }
 
+#sound {
+  height: 40px;
+}
+
 #main-words {
   width: 50%;
   float: left;
@@ -74,4 +78,40 @@ h2 {
 
 .removed {
   background-color: #ddd;
+}
+
+#flashcards {
+  border: 1px solid #000;
+  height: 300px;
+  background-color: #fff;
+  display: none;
+}
+
+#flashcard-stop {
+  border-bottom: 1px solid #000;
+  height: 40px;
+  background-color: #eee;
+}
+
+#flashcard-stop span {
+  float: right;
+  border: 1px solid #999;
+  background-color: #ccc;
+  padding: 2px 10px;
+  position: relative;
+  top: 7px;
+  right: 5px;
+  cursor: pointer;
+}
+
+#start-flashcard {
+  height: 40px;
+  display: none;
+}
+
+#start-flashcard span {
+  border: 1px solid #999;
+  background-color: #ccc;
+  padding: 2px 10px;
+  cursor: pointer;
 }
