@@ -42,7 +42,7 @@ $( document ).ready(function() {
     var random_word_list_content;
     // TODO: build randomization in the flashcard
 
-    var flashcard_interval = 9000; // 9 seconds
+    var flashcard_interval = 6000; // 6 seconds
     next_word();
     var start_flashcard = setInterval(next_word, flashcard_interval);
 

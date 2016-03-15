@@ -115,3 +115,18 @@ h2 {
   padding: 2px 10px;
   cursor: pointer;
 }
+
+#word-flashcard {
+  margin: 10px;
+}
+
+#flashcards dt a {
+  font-size: 200%;
+  text-decoration: none;
+}
+
+#flashcards dd {
+  font-size: 130%;
+  margin-left: 0px;
+  margin-top: 20px;
+}

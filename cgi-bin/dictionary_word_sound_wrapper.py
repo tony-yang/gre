@@ -39,7 +39,7 @@ if definition != '' and word_definition_response != '':
     file_name = 'static/vocabulary/newword_' + str(datetime.date.today())
 
     with open(os.path.join(cwd, file_name), 'a+') as word_file:
-        word_file.write(word + '\n' + definition +'\n')
+        word_file.write('0 ' + word + '\n' + '0 ' + definition +'\n')
 
 print('Content-type: application/json\n')
 print(json_response)
