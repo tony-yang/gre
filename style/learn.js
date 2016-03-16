@@ -39,8 +39,7 @@ $( document ).ready(function() {
         word_flashcard = $( '#word-flashcard' );
     flashcard_started();
     var word_list_content = word_list.children().toArray();
-    var random_word_list_content;
-    // TODO: build randomization in the flashcard
+    word_list_content = word_shuffle(word_list_content);
 
     var flashcard_interval = 6000; // 6 seconds
     next_word();
@@ -52,11 +51,13 @@ $( document ).ready(function() {
     });
 
     function next_word() {
+      var word_count = word_list_content.length / 2;
       var word_html = word_list_content.shift();
       var word = word_html.children[0].innerHTML;
       var definition_html = word_list_content.shift();
-      var flashcard_content = '<dl>' + word_html.outerHTML +
-                              definition_html.outerHTML + '</dl>';
+      var flashcard_content = '<div class="word_count">' + word_count + ' words left</div>';
+      flashcard_content += '<dl>' + word_html.outerHTML +
+                            definition_html.outerHTML + '</dl>';
       word_flashcard.html(flashcard_content);
       get_dictionary(word)
 
@@ -77,6 +78,26 @@ $( document ).ready(function() {
       flashcards_div.hide();
       word_list.show();
       start_flashcard_button.show();
+    };
+
+    function word_shuffle(word_list) {
+      var from_pointer = 0,
+          to_pointer = Math.floor((Math.random() * word_list.length / 2)) * 2;
+      var swap_counter;
+      for (swap_counter = 0; swap_counter < word_list.length / 4; swap_counter++) {
+        var swap_word = word_list[from_pointer];
+        word_list[from_pointer] = word_list[to_pointer];
+        word_list[to_pointer] = swap_word;
+
+        var swap_definition = word_list[from_pointer + 1];
+        word_list[from_pointer + 1] = word_list[to_pointer + 1];
+        word_list[to_pointer + 1] = swap_definition;
+
+        from_pointer = ((from_pointer + 1) * 2) % word_list.length;
+        to_pointer = ((to_pointer + 1) * 3 - 1) % word_list.length;
+      }
+
+      return word_list;
     };
   };
 

@@ -120,6 +120,12 @@ h2 {
   margin: 10px;
 }
 
+#flashcards .word_count {
+  font-size: 130%;
+  color: #999;
+  text-align: right;
+}
+
 #flashcards dt a {
   font-size: 200%;
   text-decoration: none;
