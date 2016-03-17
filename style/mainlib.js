@@ -9,10 +9,11 @@ var get_dictionary = function( word, definition ) {
 
   // console.log(url);
   $.get( url, function (response) {
-    // console.log( response );
+    console.log( response );
     $( '#sound' ).html( response.word_sound );
     var word_detail = '<h2 class="word">' + response.word + '</h2>' +
     '<div class="pronunciation">' + response.word_pronunciation + '</div>' +
+    '<div class="vocabulary-com-definition">' + response.vocabulary_com_definition + '</div>' +
     '<div class="definition">' + response.word_definition + '</div>';
     $( '#word-detail-content' ).html( word_detail );
   });
