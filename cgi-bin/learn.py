@@ -29,7 +29,7 @@ navigation = '''
 '''
 
 def create_list_index(list_name, current_path, files, vocabulary_level=''):
-    content = '<h3>%s</h3><ul id="%s-index">' % (list_name, list_name)
+    content = '<h3 id="%s-nav">%s</h3><ul id="%s-index">' % (list_name, list_name, list_name)
     if vocabulary_level:
         for filename in files:
             content_url = 'learn.py?category=%s&title=%s&vocabulary=%s' % (current_path, filename, vocabulary_level)

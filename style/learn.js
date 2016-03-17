@@ -101,7 +101,7 @@ $( document ).ready(function() {
     };
   };
 
-  if ( $( '#word-flashcard' ) ) {
+  if ( $( '#word-flashcard' ).length ) {
     flashcards();
   }
 
