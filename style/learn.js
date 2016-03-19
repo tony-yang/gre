@@ -34,28 +34,76 @@ $( document ).ready(function() {
   // The flashcard will disappear and the regular list will come back
   var flashcards = function() {
     var word_list = $( '#word-list' ),
+        word_counter,
         start_flashcard_button = $( '#start-flashcard' ),
         flashcards_div = $( '#flashcards' ),
-        word_flashcard = $( '#word-flashcard' );
-    flashcard_started();
+        word_flashcard = $( '#word-flashcard' ),
+        resume_button = $( '#flashcard-control .resume' ),
+        previous_button = $( '#flashcard-control .previous' ),
+        next_button = $( '#flashcard-control .next' ),
+        pause_button = $( '#flashcard-control .pause' );
+    flashcard_initiate();
     var word_list_content = word_list.children().toArray();
     word_list_content = word_shuffle(word_list_content);
 
     var flashcard_interval = 6000; // 6 seconds
     next_word();
-    var start_flashcard = setInterval(next_word, flashcard_interval);
+    play_flashcard();
 
-    $( 'body' ).on('click', '#flashcard-stop span', function() {
+    var start_flashcard;
+    function play_flashcard() {
+      start_flashcard = setInterval(next_word, flashcard_interval);
+    };
+
+    function stop_flashcard() {
       clearInterval(start_flashcard);
+    };
+
+    $( 'body' ).on('click', '#flashcard-control .stop', function() {
+      stop_flashcard();
       flashcard_done();
     });
 
+    $( 'body' ).on('click', '#flashcard-control .pause', function() {
+      stop_flashcard();
+      pause_button.hide();
+      resume_button.show();
+      previous_button.show();
+      next_button.show();
+    });
+
+    $( 'body' ).on('click', '#flashcard-control .resume', function() {
+      play_flashcard();
+      resume_button.hide();
+      previous_button.hide();
+      next_button.hide();
+      pause_button.show();
+    });
+
+    $( 'body' ).on('click', '#flashcard-control .previous', function() {
+      if (word_counter >= 4) {
+        word_counter -= 4;
+      } else if (word_counter == 2) {
+        word_counter -= 2;
+      }
+      next_word();
+    });
+
+    $( 'body' ).on('click', '#flashcard-control .next', function() {
+      next_word();
+    });
+
     function next_word() {
-      var word_count = word_list_content.length / 2;
-      var word_html = word_list_content.shift();
+      var total_word_count = word_list_content.length / 2;
+      var current_word_count = word_counter / 2 + 1;
+      var word_html = word_list_content[word_counter];
+      console.log(word_html.outerHTML);
+      word_counter += 1;
       var word = word_html.children[0].innerHTML;
-      var definition_html = word_list_content.shift();
-      var flashcard_content = '<div class="word_count">' + word_count + ' words left</div>';
+      var definition_html = word_list_content[word_counter];
+      console.log(definition_html.outerHTML);
+      word_counter += 1;
+      var flashcard_content = '<div class="word_count">Progress ' + current_word_count + '/' + total_word_count + '</div>';
       flashcard_content += '<dl>' + word_html.outerHTML +
                             definition_html.outerHTML + '</dl>';
       word_flashcard.html(flashcard_content);
@@ -68,7 +116,8 @@ $( document ).ready(function() {
       }
     };
 
-    function flashcard_started() {
+    function flashcard_initiate() {
+      word_counter = 0;
       flashcards_div.show();
       word_list.hide();
       start_flashcard_button.hide();
