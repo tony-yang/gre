@@ -110,7 +110,7 @@ $( document ).ready(function() {
       get_dictionary(word)
 
       // If all words in the lists are done, we are good
-      if (word_list_content.length === 0) {
+      if (word_counter >= word_list_content.length) {
         clearInterval(start_flashcard);
         setTimeout(flashcard_done, flashcard_interval);
       }
