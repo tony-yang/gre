@@ -8,8 +8,8 @@ import urllib.request, cgi, re, json, os, datetime, os.path
 
 url_parameters = cgi.FieldStorage()
 word = url_parameters.getvalue('word', '').strip()
-punctuation = '\',.!?"()[]:'
-word = word.translate(word.maketrans(punctuation, " " * len(punctuation)))
+punctuation = '\',.!?"()[]:-'
+word = word.translate(word.maketrans(punctuation, " " * len(punctuation))).strip()
 definition = url_parameters.getvalue('definition', '').strip();
 
 dictionary_response = urllib.request.urlopen('http://dictionary.reference.com/browse/' + word)
