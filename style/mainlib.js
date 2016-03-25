@@ -1,22 +1,40 @@
+var build_dictionary_cache = function(word) {
+  var url = 'dictionary_word_sound_wrapper.py?word=' + word;
+  if ( !localStorage.getItem(word) ) {
+    $.get( url, function (response) {
+      localStorage.setItem(word, JSON.stringify(response));
+    });
+  }
+};
+
 var get_dictionary = function( word, definition ) {
-  // console.log(word);
   var url = '';
-  if ( typeof definition !== 'undefined' && definition !== '' ) {
+  if ( typeof definition !== 'undefined' && (definition !== '' || definition !== '#definition') ) {
     url = 'dictionary_word_sound_wrapper.py?word=' + word + '&definition=' + definition;
   } else {
     url = 'dictionary_word_sound_wrapper.py?word=' + word;
   }
 
-  // console.log(url);
-  $.get( url, function (response) {
-    console.log( response );
+  function create_sound_and_word_detail(response) {
     $( '#sound' ).html( response.word_sound );
     var word_detail = '<h2 class="word">' + response.word + '</h2>' +
     '<div class="pronunciation">' + response.word_pronunciation + '</div>' +
     '<div class="vocabulary-com-definition">' + response.vocabulary_com_definition + '</div>' +
     '<div class="definition">' + response.word_definition + '</div>';
     $( '#word-detail-content' ).html( word_detail );
-  });
+  }
+
+  if ( localStorage.getItem(word) && (typeof definition == 'undefined' || definition == '' || definition == '#definition' )) {
+    // console.log('Found ' + word + ' in cache');
+    response = localStorage.getItem(word);
+    create_sound_and_word_detail(JSON.parse(response));
+  } else {
+    $.get( url, function (response) {
+      // console.log('Request ' + word + ' from remote');
+      localStorage.setItem(word, JSON.stringify(response));
+      create_sound_and_word_detail(response);
+    });
+  }
 };
 
 var search_word = function( eventObject ) {

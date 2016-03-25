@@ -41,7 +41,9 @@ $( document ).ready(function() {
         resume_button = $( '#flashcard-control .resume' ),
         previous_button = $( '#flashcard-control .previous' ),
         next_button = $( '#flashcard-control .next' ),
-        pause_button = $( '#flashcard-control .pause' );
+        pause_button = $( '#flashcard-control .pause' ),
+        cache_build_interval = 1000,
+        start_cache_word;
     flashcard_initiate();
     var word_list_content = word_list.children().toArray();
     word_list_content = word_shuffle(word_list_content);
@@ -97,11 +99,11 @@ $( document ).ready(function() {
       var total_word_count = word_list_content.length / 2;
       var current_word_count = word_counter / 2 + 1;
       var word_html = word_list_content[word_counter];
-      console.log(word_html.outerHTML);
+      // console.log(word_html.outerHTML);
       word_counter += 1;
       var word = word_html.children[0].innerHTML;
       var definition_html = word_list_content[word_counter];
-      console.log(definition_html.outerHTML);
+      // console.log(definition_html.outerHTML);
       word_counter += 1;
       var flashcard_content = '<div class="word_count">Progress ' + current_word_count + '/' + total_word_count + '</div>';
       flashcard_content += '<dl>' + word_html.outerHTML +
@@ -116,8 +118,23 @@ $( document ).ready(function() {
       }
     };
 
+    function next_cahce_word() {
+      var word_html = word_list_content[cache_index];
+      cache_index += 2;
+      var word = word_html.children[0].innerHTML;
+      // console.log('Build caching for ' + word);
+      build_dictionary_cache(word)
+
+      // If all words in the lists are done, we are good
+      if (cache_index >= word_list_content.length) {
+        clearInterval(start_cache_word);
+      }
+    }
+
     function flashcard_initiate() {
       word_counter = 0;
+      cache_index = 0;
+      start_cache_word = setInterval(next_cahce_word, cache_build_interval);
       flashcards_div.show();
       word_list.hide();
       start_flashcard_button.hide();
