@@ -42,6 +42,8 @@ $( document ).ready(function() {
         previous_button = $( '#flashcard-control .previous' ),
         next_button = $( '#flashcard-control .next' ),
         pause_button = $( '#flashcard-control .pause' ),
+        six_seconds_button = $( '#flashcard-control .six-seconds '),
+        fifteen_seconds_button = $( '#flashcard-control .fifteen-seconds' ),
         cache_build_interval = 1000,
         start_cache_word;
     flashcard_initiate();
@@ -64,6 +66,22 @@ $( document ).ready(function() {
     $( 'body' ).on('click', '#flashcard-control .stop', function() {
       stop_flashcard();
       flashcard_done();
+    });
+
+    $( 'body' ).on('click', '#flashcard-control .six-seconds', function() {
+      flashcard_interval = 6000;
+      six_seconds_button.addClass('active');
+      fifteen_seconds_button.removeClass('active');
+      stop_flashcard();
+      play_flashcard();
+    });
+
+    $( 'body' ).on('click', '#flashcard-control .fifteen-seconds', function() {
+      flashcard_interval = 15000;
+      six_seconds_button.removeClass('active');
+      fifteen_seconds_button.addClass('active');
+      stop_flashcard();
+      play_flashcard();
     });
 
     $( 'body' ).on('click', '#flashcard-control .pause', function() {

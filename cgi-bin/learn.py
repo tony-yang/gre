@@ -51,7 +51,7 @@ def create_content():
         if get_param_vocabulary == 'new':
             content += '<div id="start-flashcard"><span>Start Flashcards</span></div>'
             content += '<div id="flashcards">'
-            content += '<div id="flashcard-control"><span class="pause">Pause</span><span class="resume hidden">Resume</span><span class="previous hidden">Previous</span><span class="next hidden">Next</span><span class="stop">Stop</span></div>'
+            content += '<div id="flashcard-control"><span class="six-seconds active">6 sec</span><span class="fifteen-seconds">15 sec</span><span class="pause">Pause</span><span class="resume hidden">Resume</span><span class="previous hidden">Previous</span><span class="next hidden">Next</span><span class="stop">Stop</span></div>'
             content += '<div id="word-flashcard"></div>'
             content += '</div>'
 

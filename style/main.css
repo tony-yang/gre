@@ -108,6 +108,12 @@ h2 {
   float: left;
 }
 
+#flashcard-control span.active {
+  border-color: #0066ff;
+  background-color: #3399ff;
+  color: #eee;
+}
+
 #flashcard-control .stop {
   float: right;
   right: 5px;
