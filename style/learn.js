@@ -57,10 +57,18 @@ $( document ).ready(function() {
     var start_flashcard;
     function play_flashcard() {
       start_flashcard = setInterval(next_word, flashcard_interval);
+      resume_button.hide();
+      previous_button.hide();
+      next_button.hide();
+      pause_button.show();
     };
 
     function stop_flashcard() {
       clearInterval(start_flashcard);
+      pause_button.hide();
+      resume_button.show();
+      previous_button.show();
+      next_button.show();
     };
 
     $( 'body' ).on('click', '#flashcard-control .stop', function() {
@@ -84,21 +92,9 @@ $( document ).ready(function() {
       play_flashcard();
     });
 
-    $( 'body' ).on('click', '#flashcard-control .pause', function() {
-      stop_flashcard();
-      pause_button.hide();
-      resume_button.show();
-      previous_button.show();
-      next_button.show();
-    });
+    $( 'body' ).on('click', '#flashcard-control .pause', stop_flashcard);
 
-    $( 'body' ).on('click', '#flashcard-control .resume', function() {
-      play_flashcard();
-      resume_button.hide();
-      previous_button.hide();
-      next_button.hide();
-      pause_button.show();
-    });
+    $( 'body' ).on('click', '#flashcard-control .resume', play_flashcard);
 
     $( 'body' ).on('click', '#flashcard-control .previous', function() {
       if (word_counter >= 4) {
