@@ -4,7 +4,8 @@
 # code to get the mp3 file of the word, and return the mp3 file link to the
 # ajax call
 
-import urllib.request, cgi, re, json, os, datetime, os.path
+import urllib.request, urllib.error, cgi, re, json, os, datetime, os.path
+from socket import timeout
 
 url_parameters = cgi.FieldStorage()
 word = url_parameters.getvalue('word', '').strip()
@@ -12,11 +13,28 @@ punctuation = '\',.!?"()[]:-'
 word = word.translate(word.maketrans(punctuation, " " * len(punctuation))).strip()
 definition = url_parameters.getvalue('definition', '').strip();
 
-dictionary_response = urllib.request.urlopen('http://dictionary.reference.com/browse/' + word)
-dictionary_html = dictionary_response.read().decode(dictionary_response.headers.get_content_charset())
+def get_url_html_response(full_url):
+    word_response = ''
+    word_html = ''
+    try:
+        word_response = urllib.request.urlopen(full_url, timeout=5)
+        word_html = word_response.read().decode(word_response.headers.get_content_charset())
+    except (timeout, urllib.error.HTTPError) as e:
+        word_response = ''
+        word_html = '<div class="def-content">Error Fetching Data [%s]</div>' % e
 
-vocabulary_com_response = urllib.request.urlopen('https://www.vocabulary.com/dictionary/' + word)
-vocabulary_com_html = vocabulary_com_response.read().decode(vocabulary_com_response.headers.get_content_charset())
+    if not word_html:
+        try:
+            word_response = urllib.request.urlopen(full_url, timeout=5)
+            word_html = word_response.read().decode(word_response.headers.get_content_charset())
+        except (timeout, urllib.error.HTTPError) as e:
+            word_response = ''
+            word_html = '<div class="def-content">Error Fetching Data [%s]</div>' % e
+
+    return word_html
+
+dictionary_html = get_url_html_response('http://dictionary.reference.com/browse/' + word)
+vocabulary_com_html = get_url_html_response('https://www.vocabulary.com/dictionary/' + word)
 
 mp3_file = re.search('<source.*</audio>', dictionary_html)
 audio_response = '<audio controls autoplay>'
