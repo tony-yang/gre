@@ -1,7 +1,15 @@
 var save_to_local_storage = function(word, response) {
   if (response.word_definition != '<div class="def-content">Error Fetching Data [timed out]</div>' &&
       response.word_definition != '<div class="def-content">Error Fetching Data [HTTP Error 404: Not Found]</div>') {
-      localStorage.setItem(word, JSON.stringify(response));
+        try {
+          localStorage.setItem(word, JSON.stringify(response));
+        } catch(e) {
+          if (e.message.indexOf('exceeded the quota') > -1) {
+            console.log(e);
+            localStorage.clear();
+            localStorage.setItem(word, JSON.stringify(response));
+          }
+        }
   }
 };
 
@@ -38,6 +46,7 @@ var get_dictionary = function( word, definition ) {
   } else {
     $.get( url, function (response) {
       // console.log('Request ' + word + ' from remote');
+      // console.log(response)
       save_to_local_storage(word, response);
       create_sound_and_word_detail(response);
     });
