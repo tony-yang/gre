@@ -1,5 +1,6 @@
 var save_to_local_storage = function(word, response) {
-  if (response.word_definition != '<div class="def-content">Error Fetching Data [timed out]</div>' &&
+  if (response.word_definition != '' && response.word_definition != 'undefined' &&
+      response.word_definition != '<div class="def-content">Error Fetching Data [timed out]</div>' &&
       response.word_definition != '<div class="def-content">Error Fetching Data [HTTP Error 404: Not Found]</div>') {
         try {
           localStorage.setItem(word, JSON.stringify(response));

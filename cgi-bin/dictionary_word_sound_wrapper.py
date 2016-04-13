@@ -69,9 +69,9 @@ response = {'word': word,
 json_response = json.dumps(response)
 
 # Store the word/definition pair into a file if definition exists
-if definition != '' and word_definition_response != '':
+if definition != '' and word_definition_response != '' and word_definition_response != '<div class="def-content">Error Fetching Data [HTTP Error 404: Not Found]</div>':
     cwd = os.getcwd()
-    file_name = 'static/vocabulary/newword_' + str(datetime.date.today())
+    file_name = 'static/vocabulary/xdf_new_gre_newword_' + str(datetime.date.today())
 
     with open(os.path.join(cwd, file_name), 'a+') as word_file:
         word_file.write('0 ' + word + '\n' + '0 ' + definition +'\n')

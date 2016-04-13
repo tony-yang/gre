@@ -43,6 +43,7 @@ $( document ).ready(function() {
         next_button = $( '#flashcard-control .next' ),
         pause_button = $( '#flashcard-control .pause' ),
         six_seconds_button = $( '#flashcard-control .six-seconds '),
+        nine_seconds_button = $( '#flashcard-control .nine-seconds '),
         fifteen_seconds_button = $( '#flashcard-control .fifteen-seconds' ),
         cache_build_interval = 1000,
         start_cache_word;
@@ -50,7 +51,7 @@ $( document ).ready(function() {
     var word_list_content = word_list.children().toArray();
     word_list_content = word_shuffle(word_list_content);
 
-    var flashcard_interval = 6000; // 6 seconds
+    var flashcard_interval = 9000; // 9 seconds
     next_word();
     play_flashcard();
 
@@ -79,6 +80,16 @@ $( document ).ready(function() {
     $( 'body' ).on('click', '#flashcard-control .six-seconds', function() {
       flashcard_interval = 6000;
       six_seconds_button.addClass('active');
+      nine_seconds_button.removeClass('active');
+      fifteen_seconds_button.removeClass('active');
+      stop_flashcard();
+      play_flashcard();
+    });
+
+    $( 'body' ).on('click', '#flashcard-control .nine-seconds', function() {
+      flashcard_interval = 9000;
+      six_seconds_button.removeClass('active');
+      nine_seconds_button.addClass('active');
       fifteen_seconds_button.removeClass('active');
       stop_flashcard();
       play_flashcard();
@@ -87,6 +98,7 @@ $( document ).ready(function() {
     $( 'body' ).on('click', '#flashcard-control .fifteen-seconds', function() {
       flashcard_interval = 15000;
       six_seconds_button.removeClass('active');
+      nine_seconds_button.removeClass('active');
       fifteen_seconds_button.addClass('active');
       stop_flashcard();
       play_flashcard();
@@ -154,10 +166,16 @@ $( document ).ready(function() {
       start_flashcard_button.hide();
     };
 
+    function flashcard_destruct() {
+      word_counter = 0;
+      cache_index = 0;
+    };
+
     function flashcard_done() {
       flashcards_div.hide();
       word_list.show();
       start_flashcard_button.show();
+      flashcard_destruct();
     };
 
     function word_shuffle(word_list) {
