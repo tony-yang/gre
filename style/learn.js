@@ -44,9 +44,11 @@ $( document ).ready(function() {
         pause_button = $( '#flashcard-control .pause' ),
         six_seconds_button = $( '#flashcard-control .six-seconds '),
         nine_seconds_button = $( '#flashcard-control .nine-seconds '),
-        fifteen_seconds_button = $( '#flashcard-control .fifteen-seconds' ),
+        four_seconds_button = $( '#flashcard-control .four-seconds' ),
+        three_seconds_button = $( '#flashcard-control .three-seconds' ),
         cache_build_interval = 1000,
-        start_cache_word;
+        start_cache_word,
+        flashcard_play_flag = 1;
     flashcard_initiate();
     var word_list_content = word_list.children().toArray();
     word_list_content = word_shuffle(word_list_content);
@@ -57,6 +59,7 @@ $( document ).ready(function() {
 
     var start_flashcard;
     function play_flashcard() {
+      flashcard_play_flag = 1;
       start_flashcard = setInterval(next_word, flashcard_interval);
       resume_button.hide();
       previous_button.hide();
@@ -65,6 +68,7 @@ $( document ).ready(function() {
     };
 
     function stop_flashcard() {
+      flashcard_play_flag = 0;
       clearInterval(start_flashcard);
       pause_button.hide();
       resume_button.show();
@@ -81,7 +85,8 @@ $( document ).ready(function() {
       flashcard_interval = 6000;
       six_seconds_button.addClass('active');
       nine_seconds_button.removeClass('active');
-      fifteen_seconds_button.removeClass('active');
+      four_seconds_button.removeClass('active');
+      three_seconds_button.removeClass('active');
       stop_flashcard();
       play_flashcard();
     });
@@ -90,16 +95,28 @@ $( document ).ready(function() {
       flashcard_interval = 9000;
       six_seconds_button.removeClass('active');
       nine_seconds_button.addClass('active');
-      fifteen_seconds_button.removeClass('active');
+      four_seconds_button.removeClass('active');
+      three_seconds_button.removeClass('active');
       stop_flashcard();
       play_flashcard();
     });
 
-    $( 'body' ).on('click', '#flashcard-control .fifteen-seconds', function() {
-      flashcard_interval = 15000;
+    $( 'body' ).on('click', '#flashcard-control .four-seconds', function() {
+      flashcard_interval = 4000;
       six_seconds_button.removeClass('active');
       nine_seconds_button.removeClass('active');
-      fifteen_seconds_button.addClass('active');
+      four_seconds_button.addClass('active');
+      three_seconds_button.removeClass('active');
+      stop_flashcard();
+      play_flashcard();
+    });
+
+    $( 'body' ).on('click', '#flashcard-control .three-seconds', function() {
+      flashcard_interval = 3000;
+      six_seconds_button.removeClass('active');
+      nine_seconds_button.removeClass('active');
+      four_seconds_button.removeClass('active');
+      three_seconds_button.addClass('active');
       stop_flashcard();
       play_flashcard();
     });
@@ -107,6 +124,37 @@ $( document ).ready(function() {
     $( 'body' ).on('click', '#flashcard-control .pause', stop_flashcard);
 
     $( 'body' ).on('click', '#flashcard-control .resume', play_flashcard);
+
+    $( document ).keypress(function(e) {
+      if (e.keyCode == 44) {
+        stop_flashcard();
+        if (word_counter >= 4) {
+          word_counter -= 4;
+        } else if (word_counter == 2) {
+          word_counter -= 2;
+        }
+        next_word();
+        play_flashcard();
+      }
+    });
+
+    $( document ).keypress(function(e) {
+      if (e.keyCode == 46) {
+        stop_flashcard();
+        next_word();
+        play_flashcard();
+      }
+    });
+
+    $( document ).keypress(function(e) {
+      if (e.keyCode == 32) {
+        if (flashcard_play_flag == 1) {
+          stop_flashcard();
+        } else {
+          play_flashcard();
+        }
+      }
+    });
 
     $( 'body' ).on('click', '#flashcard-control .previous', function() {
       if (word_counter >= 4) {
@@ -122,6 +170,13 @@ $( document ).ready(function() {
     });
 
     function next_word() {
+      // If all words in the lists are done, we are good
+      if (word_counter > word_list_content.length) {
+        clearInterval(start_flashcard);
+        setTimeout(flashcard_done, 1000);
+        return;
+      }
+
       var total_word_count = word_list_content.length / 2;
       var current_word_count = word_counter / 2 + 1;
       var word_html = word_list_content[word_counter];
@@ -136,12 +191,6 @@ $( document ).ready(function() {
                             definition_html.outerHTML + '</dl>';
       word_flashcard.html(flashcard_content);
       get_dictionary(word)
-
-      // If all words in the lists are done, we are good
-      if (word_counter >= word_list_content.length) {
-        clearInterval(start_flashcard);
-        setTimeout(flashcard_done, flashcard_interval);
-      }
     };
 
     function next_cahce_word() {
@@ -158,6 +207,7 @@ $( document ).ready(function() {
     }
 
     function flashcard_initiate() {
+      flashcard_play_flag = 1;
       word_counter = 0;
       cache_index = 0;
       start_cache_word = setInterval(next_cahce_word, cache_build_interval);
@@ -175,7 +225,7 @@ $( document ).ready(function() {
       flashcards_div.hide();
       word_list.show();
       start_flashcard_button.show();
-      flashcard_destruct();
+      //flashcard_destruct();
     };
 
     function word_shuffle(word_list) {

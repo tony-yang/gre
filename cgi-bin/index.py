@@ -7,6 +7,7 @@ header = '''
 <html>
 <head>
     <title>GRE</title>
+    <meta charset="UTF-8">
     <link rel='stylesheet' type='text/css' href='../style/main.css'>
     <script src="../style/jquery-2.2.2.min.js"></script>
     <script src="../style/mainlib.js"></script>
