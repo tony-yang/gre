@@ -3,12 +3,12 @@ var save_to_local_storage = function(word, response) {
       response.word_definition != '<div class="def-content">Error Fetching Data [timed out]</div>' &&
       response.word_definition != '<div class="def-content">Error Fetching Data [HTTP Error 404: Not Found]</div>') {
         try {
-          localStorage.setItem(word, JSON.stringify(response));
+          sessionStorage.setItem(word, JSON.stringify(response));
         } catch(e) {
           if (e.message.indexOf('exceeded the quota') > -1) {
             console.log(e);
-            localStorage.clear();
-            localStorage.setItem(word, JSON.stringify(response));
+            sessionStorage.clear();
+            sessionStorage.setItem(word, JSON.stringify(response));
           }
         }
   }
@@ -16,7 +16,7 @@ var save_to_local_storage = function(word, response) {
 
 var build_dictionary_cache = function(word) {
   var url = 'dictionary_word_sound_wrapper.py?word=' + word;
-  if ( !localStorage.getItem(word) ) {
+  if ( !sessionStorage.getItem(word) ) {
     $.get( url, function (response) {
       save_to_local_storage(word, response);
     });
@@ -40,9 +40,9 @@ var get_dictionary = function( word, definition ) {
     $( '#word-detail-content' ).html( word_detail );
   }
 
-  if ( localStorage.getItem(word) && (typeof definition == 'undefined' || definition == '' || definition == '#definition' )) {
+  if ( sessionStorage.getItem(word) && (typeof definition == 'undefined' || definition == '' || definition == '#definition' )) {
     // console.log('Found ' + word + ' in cache');
-    response = localStorage.getItem(word);
+    response = sessionStorage.getItem(word);
     create_sound_and_word_detail(JSON.parse(response));
   } else {
     $.get( url, function (response) {

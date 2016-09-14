@@ -53,7 +53,7 @@ $( document ).ready(function() {
     var word_list_content = word_list.children().toArray();
     word_list_content = word_shuffle(word_list_content);
 
-    var flashcard_interval = 9000; // 9 seconds
+    var flashcard_interval = 4000; // 4 seconds
     next_word();
     play_flashcard();
 

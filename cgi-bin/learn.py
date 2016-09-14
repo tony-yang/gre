@@ -52,7 +52,7 @@ def create_content():
         if get_param_vocabulary == 'new':
             content += '<div id="start-flashcard"><span>Start Flashcards</span></div>'
             content += '<div id="flashcards">'
-            content += '<div id="flashcard-control"><span class="six-seconds">6 sec</span><span class="nine-seconds active">9 sec</span><span class="four-seconds">4 sec</span><span class="three-seconds">3 sec</span><span class="pause">Pause</span><span class="resume hidden">Resume</span><span class="previous hidden">Previous</span><span class="next hidden">Next</span><span class="stop">Stop</span></div>'
+            content += '<div id="flashcard-control"><span class="six-seconds">6 sec</span><span class="nine-seconds">9 sec</span><span class="four-seconds active">4 sec</span><span class="three-seconds">3 sec</span><span class="pause">Pause</span><span class="resume hidden">Resume</span><span class="previous hidden">Previous</span><span class="next hidden">Next</span><span class="stop">Stop</span></div>'
             content += '<div id="word-flashcard"></div>'
             content += '</div>'
 
@@ -93,6 +93,7 @@ def create_content():
         content = '<div id="learn-nav">'
         static_path = os.path.join(cwd, 'static')
         for path, dirs, files in os.walk(static_path):
+            files.sort()
             current_path = os.path.split(path)[-1]
             if current_path == 'static':
                 content += '<h2>Index</h2>'

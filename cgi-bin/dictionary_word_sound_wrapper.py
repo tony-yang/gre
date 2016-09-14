@@ -36,6 +36,9 @@ def get_url_html_response(full_url):
 dictionary_html = get_url_html_response('http://dictionary.reference.com/browse/' + word)
 vocabulary_com_html = get_url_html_response('https://www.vocabulary.com/dictionary/' + word)
 
+# dictionary_html = ''
+# vocabulary_com_html = ''
+
 mp3_file = re.search('<source.*</audio>', dictionary_html)
 audio_response = '<audio controls autoplay>'
 if mp3_file:
@@ -68,10 +71,12 @@ response = {'word': word,
             'vocabulary_com_sentence': vocabulary_com_sentence_response}
 json_response = json.dumps(response)
 
+# word_definition_response = 'offline'
+
 # Store the word/definition pair into a file if definition exists
 if definition != '' and word_definition_response != '' and word_definition_response != '<div class="def-content">Error Fetching Data [HTTP Error 404: Not Found]</div>':
     cwd = os.getcwd()
-    file_name = 'static/vocabulary/xdf_new_gre_newword_' + str(datetime.date.today())
+    file_name = 'static/vocabulary/xdf_6_to_2_vocabulary_' + str(datetime.date.today())
 
     with open(os.path.join(cwd, file_name), 'a+') as word_file:
         word_file.write('0 ' + word + '\n' + '0 ' + definition +'\n')
