@@ -1,0 +1,14 @@
+#!/bin/bash
+
+exec 3>&1 4>&2
+exec 1>>/var/log/gre/gre_starter_sh.log 2>&1
+
+gre_process=$(ps aux | grep -v grep | grep webserver)
+
+if [ -z "$gre_process" ]
+then
+  echo "$(date) Starting the GRE vocabulary ..."
+  /usr/bin/nohup /usr/bin/python /usr/local/lib/gre/webserver.py > /dev/null 2>&1 &
+fi
+
+exit 0
